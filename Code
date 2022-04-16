@@ -1,0 +1,1630 @@
+//Main
+
+import java.util.Random;
+
+import javax.swing.ImageIcon;
+
+public class Main {
+	
+	public static void main(String[] args)  {
+		
+		new MyFrame();
+		
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//MyFrame
+
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import javax.swing.border.Border;
+import javax.swing.*;
+
+public class MyFrame extends JFrame implements ActionListener, MouseListener {
+	
+	int counter=0, courses=0, gender=0, event=0, length=0, isCorrect=0, isWrong=0, i=0, option=0;
+
+	JButton sc;//button for short course
+	JButton lc;//button for long course
+	
+	//gender buttons
+	JButton female;
+	JButton male;
+	
+	//menu
+	JMenuItem backgroundColor;
+	JMenuItem buttonColor;
+	JMenuItem foregroundColor;
+	JMenuItem neww;
+	JMenuItem save;
+	JMenuItem txt, pdf, jpg;
+	JMenuItem newPoints;
+	
+	JButton[] events;
+	
+	JButton[] lengths;
+	
+	JButton[] digit;
+	
+	JTextField time;
+	JTextField points;
+	
+	JLabel img;
+	JLabel imgFina;
+	
+	Border border;
+	
+	JPanel panelTOC;//panel for type of course
+	JPanel digits;//panel for digits, clear, delete and calculate
+	JPanel panelFM;//panel for female or male
+	JPanel panelEv;//panel for events
+	JPanel panelLength;//panel for lengths
+	
+	JTextField panelPoints;//text area for points
+	JTextField panelTime;//text area to introduce time
+	
+	ImageIcon swim;  //image with swimmer
+	ImageIcon shortc; //table for short course base times
+	ImageIcon longc;  //table for long course base times
+	ImageIcon fina;   //fina logo
+	ImageIcon formulaa;  //image with the formula
+	
+	
+	//Base times for events in seconds
+	//for male short course
+	double[][] baseTimesMaleSc= {{20.16, 44.94, 99.37, 212.25, 443.42, 848.06},  //free
+								 {21.75, 47.78, 108.24}, //butterfly
+								 {25.25, 55.34, 120.16}, //breast
+								 {22.22, 48.33, 105.63}, //back
+								 {49.28, 109.63, 234.81}}; //medley
+	
+	//for female short course
+	double[][] baseTimesFemaleSc={{22.93, 50.25, 110.42, 233.92, 479.34, 918.01}, //free
+								  {24.38, 54.61, 119.61}, //butterfly
+			                      {28.56, 62.36, 134.57}, //breast
+			                      {25.60, 54.89, 118.94}, //back
+			                      {56.51, 121.86, 258.94}}; //medley
+	
+	//for male long course
+	double[][] baseTimesMaleLc= {{20.91, 46.91, 102.00, 220.07, 452.12, 871.02}, //free
+								 {22.27, 49.45, 110.73}, //butterfly
+								 {25.95, 56.88, 126.12}, //breast
+								 {23.80, 51.85, 111.92}, //back
+								 {114.00, 243.84}}; //medley
+	
+	//for female long course
+	double[][] baseTimesFemaleLc={{23.67, 51.71, 112.98, 236.46, 484.79, 920.84}, //free
+								  {24.43, 55.48, 121.81}, //butterfly
+					              {29.30, 64,13, 138.95}, //breast
+					              {26.98, 57.45, 123.35}, //back
+					              {126.12, 266.36}}; //medley
+	
+	
+	JMenuItem tableSc, tableLc, formula, siteFina;
+	JMenu edit, file, help, quit; 
+	JMenuBar menubar; //the menu bar
+	
+	//progress bar which shows the percentage
+	JProgressBar bar=new JProgressBar();
+	
+	MyFrame(){		
+		
+		////////////////////////creating GUI's///////////////////
+		
+		events= new JButton[5];
+		lengths= new JButton[6];
+		digit= new JButton[16];
+		
+		time=new JTextField();
+		points=new JTextField();
+		
+		img=new JLabel();
+		imgFina=new JLabel();
+		
+		 panelTOC=new JPanel();
+		 digits=new JPanel();
+		 panelFM=new JPanel();
+		 panelEv=new JPanel();
+		 panelLength=new JPanel();
+		 
+		 border = BorderFactory.createLineBorder(new Color(0, 220, 230));
+		
+		 swim=new ImageIcon("swim.png");
+		 shortc=new ImageIcon("shortc.png");
+		 longc=new ImageIcon("longc.png");
+		 fina=new ImageIcon("fina.png");
+		 formulaa=new ImageIcon("formulaa.png");
+		 
+		  sc=new JButton("Short Course(25m)");//button for short course
+		  lc=new JButton("Long Course(50m)");//button for long course
+				
+		/////////////buttons////////////////////
+		
+		bar.setValue(0);
+		bar.setBounds(200, 850, 420, 50);
+		bar.setStringPainted(true);
+		bar.setFont(new Font("MV Boli", Font.PLAIN, 25));
+		bar.setForeground(new Color(0, 151, 201));
+		bar.setBackground(new Color(0, 51, 102));
+		
+		sc.setFocusable(false);
+		sc.setBackground(new Color(0, 175, 255));
+		sc.setFont(new Font("SERIF", Font.ITALIC, 20));
+		sc.setForeground(Color.black);
+		sc.addActionListener(this);
+		sc.setBorder(null);
+		sc.setPreferredSize(new Dimension(170, 40));
+		
+		lc.setFocusable(false);
+		lc.setFont(new Font("SERIF", Font.ITALIC, 20));
+		lc.setBackground(new Color(0, 175, 255));
+		lc.setForeground(Color.black);
+		lc.addActionListener(this);
+		lc.setBorder(null);
+		lc.setPreferredSize(new Dimension(170, 40));
+		
+		female=new JButton("Female");
+		male=new JButton("Male");
+		
+		female.setFocusable(false);
+		female.setBackground(new Color(0, 175, 255));
+		female.setFont(new Font("SERIF", Font.ITALIC, 20));
+		female.setForeground(Color.black);
+		female.addActionListener(this);
+		female.setBorder(null);
+		female.setPreferredSize(new Dimension(120, 40));
+		
+		male.setFocusable(false);
+		male.setFont(new Font("SERIF", Font.ITALIC, 20));
+		male.setBackground(new Color(0, 175, 255));
+		male.setForeground(Color.black);
+		male.addActionListener(this);
+		male.setBorder(null);
+		male.setPreferredSize(new Dimension(120, 40));
+		
+		events[0]=new JButton("Free");
+		events[1]=new JButton("Fly");
+		events[2]=new JButton("Backstroke");
+		events[3]=new JButton("Breaststroke");
+		events[4]=new JButton("Medley");	
+		for(int i=0;i<5;i++) {
+			events[i].setFocusable(false);
+			events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			events[i].setBackground(new Color(0, 175, 255));
+			events[i].setForeground(Color.black);
+			events[i].addActionListener(this);
+			events[i].setBorder(null);
+			events[i].setPreferredSize(new Dimension(120, 40));
+		}
+		
+		lengths[0]=new JButton("50");
+		lengths[1]=new JButton("100");
+		lengths[2]=new JButton("200");
+		lengths[3]=new JButton("400");
+		lengths[4]=new JButton("800");	
+		lengths[5]=new JButton("1500");	
+		for(int i=0;i<6;i++) {
+			lengths[i].setFocusable(false);
+			lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			lengths[i].setBackground(new Color(0, 175, 255));
+			lengths[i].setForeground(Color.black);
+			lengths[i].addActionListener(this);
+			lengths[i].setPreferredSize(new Dimension(70, 40));
+			lengths[i].setVerticalTextPosition(JButton.CENTER);
+			lengths[i].setVisible(false);
+		}
+			
+		for(int i=0;i<9;i++)	digit[i]=new JButton(""+(i+1));
+		digit[10]=new JButton("0");
+		digit[11]=new JButton("C");
+		digit[9]=new JButton("Del");
+		digit[13]=new JButton(":");
+		digit[14]=new JButton("Calculate");
+		digit[12]=new JButton("");
+		digit[12].setEnabled(false);
+		digit[15]=new JButton("");
+		digit[15].setEnabled(false);
+		for(int i=0;i<16;i++) {
+			digit[i].setFocusable(false);
+			digit[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			digit[i].setBackground(new Color(200, 255, 255));
+			digit[i].setForeground(Color.black);
+			digit[i].addActionListener(this);
+		}
+		
+		img.setBounds(300, 0, 600, 150);
+		img.setIcon(fina);
+		img.setBackground(Color.white);
+		img.addMouseListener(this);
+		
+		//imgFina.setBounds(0, 20, 200, 70);
+		//imgFina.setIcon(fina);
+		//imgFina.setBackground(new Color(0, 220, 230));
+		
+		///////////////tipul de cursa//////////////
+		panelTOC.setBounds(0, 150, 800, 70);
+		panelTOC.setLayout(new FlowLayout());
+		panelTOC.add(sc);
+		panelTOC.add(lc); 
+		panelTOC.setBackground(new Color(0, 220, 230));
+		panelTOC.setBorder(null);
+		
+		///////////////////timp////////////////////
+		time.setBounds(100, 220, 600, 150);
+		time.setFont(new Font("SERIF", Font.ITALIC, 50));
+		time.setBackground(new Color(200, 255, 255));
+		time.setForeground(Color.black);
+		time.setText("00:00:00");
+		time.setHorizontalAlignment(JTextField.CENTER);
+		time.setBorder(null);
+		time.setEditable(false);
+		
+		/////////////points/////////////////////////////////
+		points.setBounds(100, 380, 600, 100);
+		points.setFont(new Font("SERIF", Font.ITALIC, 50));
+		points.setBackground(new Color(0, 220, 230));
+		points.setForeground(Color.black);
+		points.setText("0 points");
+		points.setEditable(false);
+		points.setBorder(null);
+		points.setHorizontalAlignment(JTextField.CENTER);
+		
+		////////////gender//////////////////////////////
+		panelFM.setBounds(0, 500, 800, 70);
+		panelFM.setLayout(new FlowLayout());
+		panelFM.add(female);
+		panelFM.add(male);
+		panelFM.setBackground(new Color(0, 220, 230));
+		panelFM.setBorder(null);
+		
+		//////////events////////////////////////////
+		panelEv.setBounds(0, 550, 800, 60);
+		panelEv.setLayout(new FlowLayout());
+		for(int i=0;i<5;i++) {
+			panelEv.add(events[i]);
+		}
+		panelEv.setBackground(new Color(0, 220, 230));
+		panelEv.setBorder(null);
+		
+		///////////lengths/////////////////////////
+		panelLength.setBounds(90, 600, 600, 80);
+		panelLength.setLayout(new FlowLayout());
+		for(int i=0;i<6;i++) {
+			panelLength.add(lengths[i]);
+			lengths[i].setBorder(border);
+		}
+		panelLength.setBackground(new Color(0, 220, 230));
+		panelLength.setBorder(null);
+		
+		
+		///////////////digits//////////////////////
+		digits.setBounds(150, 670, 500, 150);
+		digits.setLayout(new GridLayout(4, 4, 0, 0));
+		digits.setBorder(null);
+		
+			digits.add(digit[6]);
+			digits.add(digit[7]);
+			digits.add(digit[8]);
+			digits.add(digit[9]);
+			digits.add(digit[3]);
+			digits.add(digit[4]);
+			digits.add(digit[5]);
+			digits.add(digit[11]);
+			digits.add(digit[0]);
+			digits.add(digit[1]);
+			digits.add(digit[2]);
+			//digits.add(digit[12]);
+			digits.add(digit[13]);
+			digits.add(digit[12]);
+			digits.add(digit[10]);
+			digits.add(digit[15]);
+			digits.add(digit[14]);
+			
+			
+		for(int i=0; i<16; i++)	digit[i].setBorder(border);
+		digits.setBackground(new Color(0, 220, 230));
+		
+		//////////////////Menu//////////////////////////////
+		menubar=new JMenuBar();
+		siteFina=new JMenuItem("FINA");
+		tableSc=new JMenuItem("Base Times SC");
+		tableLc=new JMenuItem("Base Times LC");
+		formula=new JMenuItem("Formula");
+		edit=new JMenu("Edit");
+		file=new JMenu("File");
+		help=new JMenu("Help");
+		quit=new JMenu("Quit");
+		
+		 backgroundColor=new JMenuItem("Background Color");
+		 buttonColor=new JMenuItem("Button Color");
+		 foregroundColor=new JMenuItem("Foreground Color");
+		 neww=new JMenuItem("New");
+		 save=new JMenuItem("Save as .txt");
+		 pdf=new JMenuItem("Save as PDF");
+		 jpg=new JMenuItem("Save as image");
+		 newPoints=new JMenuItem("Points to time");
+		
+		help.add(siteFina);
+		help.add(tableSc);
+		help.add(tableLc);
+		help.add(formula);
+		
+		siteFina.addActionListener(this);
+		siteFina.setMnemonic(KeyEvent.VK_F);
+		tableLc.addActionListener(this);
+		tableLc.setMnemonic(KeyEvent.VK_L);
+		tableSc.addActionListener(this);
+		tableSc.setMnemonic(KeyEvent.VK_S);	
+		formula.addActionListener(this);	
+		
+		backgroundColor.addActionListener(this);
+		backgroundColor.setMnemonic(KeyEvent.VK_B);
+		buttonColor.addActionListener(this);
+		buttonColor.setMnemonic(KeyEvent.VK_C);
+		foregroundColor.addActionListener(this);
+		
+		neww.addActionListener(this);
+		neww.setMnemonic(KeyEvent.VK_N);
+		save.addActionListener(this);
+		newPoints.addActionListener(this);
+		//save.setMnemonic(KeyEvent.VK_S);
+		
+		help.addActionListener(this);
+		help.setMnemonic(KeyEvent.VK_H);
+		quit.addActionListener(this);
+		quit.setMnemonic(KeyEvent.VK_Q);
+		
+		edit.add(backgroundColor);
+		edit.add(buttonColor);
+		edit.add(foregroundColor);
+		
+		file.add(neww);
+		file.add(save);	
+		//file.add(pdf);
+		//file.add(jpg);
+		file.add(newPoints);
+		
+		menubar.add(file);
+		menubar.add(edit);
+		menubar.add(help);
+		//menubar.add(quit);
+		
+		bar.setVisible(false);
+		
+		this.add(bar);
+		this.setJMenuBar(menubar);
+		this.add(panelTOC);
+		this.add(time);
+		this.add(img);
+		this.add(digits);
+		this.add(panelEv);
+		this.add(panelFM);
+		this.add(imgFina);
+		this.add(panelLength);
+		this.add(points);
+		//this.setIconImage();;
+		this.setTitle("FINA Points Calculator");
+		this.setLayout(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(400, 20, 800, 1000);
+		this.getContentPane().setBackground(new Color(0, 220, 230));
+		//this.setSize(new Dimension(800, 960));
+		//this.pack();
+		this.setVisible(true);
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		//changing the panels background color
+		if(e.getSource()==backgroundColor) {
+			JColorChooser c=new JColorChooser();
+			
+			Color color=JColorChooser.showDialog(null, "Pick a color", Color.black);
+			this.getContentPane().setBackground(color);
+			digits.setBackground(color);
+			panelEv.setBackground(color);
+			panelFM.setBackground(color);
+			panelTOC.setBackground(color);
+			panelLength.setBackground(color);
+			points.setBackground(color);
+			for(int i=0; i<digit.length; i++)
+				digit[i].setBorder(BorderFactory.createLineBorder(color));
+		}
+		
+		//changing the buttons color
+		if(e.getSource()==buttonColor) {
+			JColorChooser c=new JColorChooser();
+			
+			Color color=JColorChooser.showDialog(null, "Pick a color", Color.black);
+			male.setBackground(color);
+			female.setBackground(color);
+			sc.setBackground(color);
+			lc.setBackground(color);
+			time.setBackground(color);
+			points.setBackground(color);
+			for(int i=0; i<digit.length; i++)
+				digit[i].setBackground(color);
+			for(int i=0; i<events.length; i++)
+				events[i].setBackground(color);
+			for(int i=0; i<lengths.length; i++)
+				lengths[i].setBackground(color);
+		}
+	
+		//changing the foreground color
+		if(e.getSource()==foregroundColor) {
+			JColorChooser c=new JColorChooser();
+			
+			Color color=JColorChooser.showDialog(null, "Pick a color", Color.black);
+			male.setForeground(color);
+			female.setForeground(color);
+			sc.setForeground(color);
+			lc.setForeground(color);
+			time.setForeground(color);
+			points.setForeground(color);
+			for(int i=0; i<digit.length; i++)
+				digit[i].setForeground(color);
+			for(int i=0; i<events.length; i++)
+				events[i].setForeground(color);
+			for(int i=0; i<lengths.length; i++)
+				lengths[i].setForeground(color);
+		}
+		
+		//opening the FINA site
+		if(e.getSource()==siteFina) {
+			String urlString="http://fina.org";
+			try {
+				Desktop.getDesktop().browse(new URL(urlString).toURI());
+			} catch (MalformedURLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (URISyntaxException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//this.open("http://fina.org");
+		}
+		
+		//opening the base times table for short course
+		if(e.getSource()==tableSc) {	
+			new NewImage(shortc, 600, 900, "Base Times SC");
+		}
+		
+		//opening the base times table for long course
+		if(e.getSource()==tableLc) {
+			new NewImage(longc, 600, 900, "Base Times LC");		
+		}
+		
+		//reset the window and start a new one
+		//warning message for validation
+		if(e.getSource()==neww) {
+			int dialogButton=JOptionPane.showConfirmDialog (null, "Are you sure?", "WARNING", JOptionPane.YES_NO_CANCEL_OPTION);
+            if(dialogButton == JOptionPane.YES_OPTION) {
+            	new MyFrame();
+    			this.dispose();
+    			
+	            if(dialogButton == JOptionPane.NO_OPTION) {
+	            }
+              }
+		}
+		
+		//quitting the window
+		if(e.getSource()==quit) {
+			this.dispose();
+		}
+		
+		//opening the formula image
+		if(e.getSource()==formula) {
+			new NewImage(formulaa, 790, 850, "Formula");
+		}
+		
+		//another interface
+		//calculating the time based on the points
+		if(e.getSource()==newPoints) {
+			
+			option=1;
+			
+			time.setVisible(false);
+			points.setVisible(false);
+			
+			panelPoints=new JTextField();
+			panelTime=new JTextField();
+			
+			panelPoints.setBounds(100, 220, 600, 100);
+			panelPoints.setFont(new Font("SERIF", Font.ITALIC, 50));
+			panelPoints.setBackground(new Color(200, 255, 255));
+			panelPoints.setForeground(Color.black);
+			panelPoints.setText("0");
+			panelPoints.setBorder(null);
+			panelPoints.setEditable(false);
+			panelPoints.setHorizontalAlignment(JTextField.CENTER);
+			
+			panelTime.setBounds(100, 350, 600, 150);
+			panelTime.setFont(new Font("SERIF", Font.ITALIC, 50));
+			panelTime.setBackground(new Color(0, 220, 230));
+			panelTime.setForeground(Color.black);
+			panelTime.setText("00:00:00");
+			panelTime.setHorizontalAlignment(JTextField.CENTER);
+			panelTime.setBorder(null);
+			panelTime.setEditable(false);
+			
+			this.add(panelPoints);
+			this.add(panelTime);
+			
+			
+		}
+		
+		//option to save as .txt the information
+		if(e.getSource()==save) {
+			FileSave fileSave=new FileSave();
+			String event=new String(), ev=new String(),leng =new String(),course=new String(), gend=new String();
+			
+			if(option==0) {
+				if(!sc.isEnabled())	course=sc.getText();
+				if(!lc.isEnabled())	course=lc.getText();
+				
+				if(!male.isEnabled())	gend=male.getText();
+				if(!female.isEnabled())	gend=female.getText();
+				
+					if(!events[0].isEnabled())	{
+						ev="Free";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[1].isEnabled()) {
+						ev="Fly";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[2].isEnabled()) {
+						ev="Backstroke";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[3].isEnabled()) {
+						ev="Breaststroke";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+								leng=lengths[i].getText();
+						}
+					}
+					if(!events[4].isEnabled()) {
+						ev="Medley";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					
+					event=ev+" "+ gend+" "+leng+" m "+course;
+				
+				fileSave.initUI(time.getText(), points.getText(), event);
+				fileSave.saveToFile();			
+			}
+			
+			else {
+				if(!sc.isEnabled())	course=sc.getText();
+				if(!lc.isEnabled())	course=lc.getText();
+				
+				if(!male.isEnabled())	gend=male.getText();
+				if(!female.isEnabled())	gend=female.getText();
+				
+					if(!events[0].isEnabled())	{
+						ev="Free";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[1].isEnabled()) {
+						ev="Fly";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[2].isEnabled()) {
+						ev="Backstroke";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					if(!events[3].isEnabled()) {
+						ev="Breaststroke";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+								leng=lengths[i].getText();
+						}
+					}
+					if(!events[4].isEnabled()) {
+						ev="Medley";
+						for(int i=0; i<lengths.length; i++) {
+							if(!lengths[i].isEnabled())
+							leng=lengths[i].getText();
+						}
+					}
+					
+					event=ev+" "+ gend+" "+leng+" m "+course;
+				
+				fileSave.initUI(panelTime.getText(), panelPoints.getText(), event);
+				fileSave.saveToFile();			
+			}
+			
+		}
+		
+		/*
+		if(e.getSource()==jpg) {
+		
+				SaveImg fileSave=new SaveImg();
+			
+				fileSave.initUI();
+				fileSave.saveToFile();						
+			
+		}*/
+		
+		//////////////////Adding +20 to the progress bar if one of these is selected/////////////////////////////////////
+		
+		if(e.getSource()==sc||e.getSource()==lc) {
+			if(courses==0) {
+				counter+=20;
+				bar.setValue(counter);
+				courses=1;
+				if(bar.getValue()==100) {
+					bar.setString("You are ready");
+				}
+			}
+			if(courses==1)
+				bar.setVisible(true);
+
+		}
+		if(e.getSource()==male||e.getSource()==female) {
+			if(gender==0) {
+				counter+=20;
+				bar.setValue(counter);
+				gender=1;
+			}
+			if(gender==1)
+				bar.setVisible(true);
+
+		}
+		for(int i=0; i<events.length; i++)
+		if(e.getSource()==events[i]) {
+			if(event==0) {
+				counter+=20;
+				bar.setValue(counter);
+				event=1;
+				if(bar.getValue()==100) {
+					bar.setString("You are ready");
+				}
+				if(event==1)
+					bar.setVisible(true);
+			}
+		}
+		for(int i=0; i<lengths.length; i++)
+			if(e.getSource()==lengths[i]) {
+				if(length==0) {
+					counter+=20;
+					bar.setValue(counter);
+					length=1;
+					if(bar.getValue()==100) {
+						bar.setString("You are ready");
+					}
+					if(length==1)
+						bar.setVisible(true);
+				}
+			}
+		
+		if(e.getSource()==sc) {
+			sc.setEnabled(false);
+			if(events[4].isEnabled()==false)	lengths[1].setVisible(true);
+			sc.setBackground(new Color(200, 255, 255));
+			sc.setFont(new Font("SERIF", Font.BOLD, 20));
+			lc.setEnabled(true);
+			lc.setBackground(new Color(0, 175, 255));
+			lc.setFont(new Font("SERIF", Font.ITALIC, 20));			
+
+		}
+		if(e.getSource()==lc) {
+			lc.setEnabled(false);
+			lc.setBackground(new Color(200, 255, 255));
+			lc.setFont(new Font("SERIF", Font.BOLD, 20));
+			sc.setEnabled(true);
+			sc.setBackground(new Color(0, 175, 255));
+			sc.setFont(new Font("SERIF", Font.ITALIC, 20));
+		}
+		
+		////////////////////////////////
+		if(e.getSource()==male) {
+			male.setEnabled(false);
+			male.setBackground(new Color(200, 255, 255));
+			male.setFont(new Font("SERIF", Font.BOLD, 20));
+			female.setEnabled(true);
+			female.setBackground(new Color(0, 175, 255));
+			female.setFont(new Font("SERIF", Font.ITALIC, 20));
+		}
+		if(e.getSource()==female) {
+			female.setEnabled(false);
+			female.setBackground(new Color(200, 255, 255));
+			female.setFont(new Font("SERIF", Font.BOLD, 20));
+			male.setEnabled(true);
+			male.setBackground(new Color(0, 175, 255));
+			male.setFont(new Font("SERIF", Font.ITALIC, 20));
+		}
+		
+		////////////////////////////////
+		//setting visible only certain lengths depending on the event selected
+		if(e.getSource()==events[0]) {
+			for(int i=0;i<5;i++) {
+				events[i].setEnabled(true);
+				events[i].setBackground(new Color(0, 175, 255));
+				events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			events[0].setEnabled(false);
+			events[0].setBackground(new Color(200, 255, 255));
+			events[0].setFont(new Font("SERIF", Font.BOLD, 20));
+			for(int i=0;i<6;i++) {
+				lengths[i].setVisible(true);
+			}
+		}
+		if(e.getSource()==events[1]) {
+			for(int i=0;i<5;i++) {
+				events[i].setEnabled(true);
+				events[i].setBackground(new Color(0, 175, 255));
+				events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			events[1].setEnabled(false);
+			events[1].setBackground(new Color(200, 255, 255));
+			events[1].setFont(new Font("SERIF", Font.BOLD, 20));
+			for(int i=0;i<3;i++) {
+				lengths[i].setVisible(true);
+			}
+			for(int i=3;i<6;i++) {
+				lengths[i].setVisible(false);
+			}
+		}
+		if(e.getSource()==events[2]) {
+			for(int i=0;i<5;i++) {
+				events[i].setEnabled(true);
+				events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+				events[i].setBackground(new Color(0, 175, 255));
+			}
+			events[2].setEnabled(false);
+			events[2].setBackground(new Color(200, 255, 255));
+			events[2].setFont(new Font("SERIF", Font.BOLD, 20));
+			for(int i=0;i<3;i++) {
+				lengths[i].setVisible(true);
+			}
+			for(int i=3;i<6;i++) {
+				lengths[i].setVisible(false);
+			}
+		}
+		if(e.getSource()==events[3]) {
+			for(int i=0;i<5;i++) {
+				events[i].setEnabled(true);
+				events[i].setBackground(new Color(0, 175, 255));
+				events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			events[3].setEnabled(false);
+			events[3].setBackground(new Color(200, 255, 255));
+			events[3].setFont(new Font("SERIF", Font.BOLD, 20));
+			for(int i=0;i<3;i++) {
+				lengths[i].setVisible(true);
+			}
+			for(int i=3;i<6;i++) {
+				lengths[i].setVisible(false);
+			}
+		}
+		if(e.getSource()==events[4]) {
+			for(int i=0;i<5;i++) {
+				events[i].setEnabled(true);
+				events[i].setBackground(new Color(0, 175, 255));
+				events[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			events[4].setEnabled(false);
+			events[4].setBackground(new Color(200, 255, 255));
+			events[4].setFont(new Font("SERIF", Font.BOLD, 20));
+			for(int i=2;i<4;i++) {
+				lengths[i].setVisible(true);
+			}
+			
+			lengths[0].setVisible(false);
+			lengths[4].setVisible(false);
+			lengths[5].setVisible(false);
+		}
+		
+		////////////////////////////////////////
+		//setting enable to false if one length is selected
+		if(e.getSource()==lengths[0]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[0].setEnabled(false);
+			lengths[0].setBackground(new Color(200, 255, 255));
+			lengths[0].setFont(new Font("SERIF", Font.BOLD, 20));
+		}
+		if(e.getSource()==lengths[1]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[1].setEnabled(false);
+			lengths[1].setBackground(new Color(200, 255, 255));
+			lengths[1].setFont(new Font("SERIF", Font.BOLD, 20));
+			
+		}
+		if(e.getSource()==lengths[2]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[2].setEnabled(false);
+			lengths[2].setBackground(new Color(200, 255, 255));
+			lengths[2].setFont(new Font("SERIF", Font.BOLD, 20));
+
+		}
+		if(e.getSource()==lengths[0]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[0].setEnabled(false);
+			lengths[0].setBackground(new Color(200, 255, 255));
+			lengths[0].setFont(new Font("SERIF", Font.BOLD, 20));
+
+		}
+		if(e.getSource()==lengths[3]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[3].setEnabled(false);
+			lengths[3].setBackground(new Color(200, 255, 255));
+			lengths[3].setFont(new Font("SERIF", Font.BOLD, 20));
+
+		}
+		if(e.getSource()==lengths[4]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[4].setEnabled(false);
+			lengths[4].setBackground(new Color(200, 255, 255));
+			lengths[4].setFont(new Font("SERIF", Font.BOLD, 20));
+
+		}
+		if(e.getSource()==lengths[5]) {
+			for(int i=0;i<6;i++) {
+				lengths[i].setEnabled(true);
+				lengths[i].setBackground(new Color(0, 175, 255));
+				lengths[i].setFont(new Font("SERIF", Font.ITALIC, 20));
+			}
+			lengths[5].setEnabled(false);
+			lengths[5].setBackground(new Color(200, 255, 255));
+			lengths[5].setFont(new Font("SERIF", Font.BOLD, 20));
+		}			
+		
+		
+		if(option==0) {
+		for(int i=0; i<9;i++)
+			if(e.getSource()==digit[i]) {
+				time.setText(time.getText().concat(String.valueOf(i+1)));
+			}
+		if(e.getSource()==digit[10]) {
+			time.setText(time.getText().concat("0"));
+		}
+		if(e.getSource()==digit[13]) {
+			time.setText(time.getText().concat(":"));
+		}
+		if(e.getSource()==digit[11]) {
+			time.setText("");
+		}
+		if(e.getSource()==digit[9]) {
+			String string=time.getText();
+			StringBuffer sb=new StringBuffer(string);
+			if(sb.length()!=0)
+				sb.deleteCharAt(string.length()-1);
+			time.setText(sb.toString());
+		}
+		}
+		else {
+			for(int i=0; i<9;i++)
+				if(e.getSource()==digit[i]) {
+					panelPoints.setText(panelPoints.getText().concat(String.valueOf(i+1)));
+				}
+			if(e.getSource()==digit[10]) {
+				panelPoints.setText(panelPoints.getText().concat("0"));
+			}
+			
+			digit[13].setEnabled(false);
+			
+			if(e.getSource()==digit[11]) {
+				panelPoints.setText("");
+			}
+			if(e.getSource()==digit[9]) {
+				String string=panelPoints.getText();
+				StringBuffer sb=new StringBuffer(string);
+				if(sb.length()!=0)
+					sb.deleteCharAt(string.length()-1);
+				panelPoints.setText(sb.toString());
+			}
+		}
+		
+		
+		///////////////calculate the points//////////
+		if(e.getSource()==digit[14]) {
+			
+			//if(option==0) {
+			String sir=time.getText();
+			String[] splited=sir.split(":");
+			
+			if((splited.length<=3&&splited.length>=2)&&(sir!="00:00:00"&&sir!="00:00")&&!sir.isEmpty()&&points.getText()!="Incorrect"
+				&& convertToSeconds(time.getText())!=-1) {
+				counter+=20;
+				bar.setValue(counter);
+				isCorrect=1;
+				if(bar.getValue()==100) {
+					bar.setString("You are ready");
+				}
+			}
+			else
+				if(isCorrect==1&&isWrong!=1) {
+					counter-=20;
+					bar.setValue(counter);
+					bar.setString(bar.getValue()+"%");
+					isWrong=1;
+				}
+		//	}
+			/*
+			if(option==1) {
+				
+				if(panelTime.getText()=="Incorrect") {
+					if(isCorrect==1&&isWrong!=1) {
+						counter-=20;
+						bar.setValue(counter);
+						bar.setString(bar.getValue()+"%");
+						isWrong=1;
+					}
+				}
+				
+				else {
+					counter+=20;
+					bar.setValue(counter);
+					isCorrect=1;
+					if(bar.getValue()==100) {
+						bar.setString("You are ready");
+					}
+				}
+				
+			}*/
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if(option==0) {
+			/////////////////////Displaying the points depending on the selected options///////////////////////////////
+			//////////////////////////////////Female Short Course/////////////////////////////////////////////////////
+			if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[0][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[0][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[0][2], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[0][3], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[0][4], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[0][5], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[1][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[1][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[1][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[3][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[3][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[3][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[2][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[2][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[2][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[1].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[4][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+				display(finaPoints(baseTimesFemaleSc[4][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+				display(finaPoints(baseTimesFemaleSc[4][2], convertToSeconds(time.getText())));
+		
+			//////////////////////////////////Male Short Course/////////////////////////////////////////////////////
+			if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[0][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[0][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[0][2], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[0][3], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[0][4], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[0][5], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[1][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[1][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[1][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[3][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[3][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[3][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[2][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[2][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[2][2], convertToSeconds(time.getText())));
+			
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[1].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[4][0], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+				display(finaPoints(baseTimesMaleSc[4][1], convertToSeconds(time.getText())));
+			else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+				display(finaPoints(baseTimesMaleSc[4][2], convertToSeconds(time.getText())));
+			
+			//////////////////////////////////Female Long Course/////////////////////////////////////////////////////
+			if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[0][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[0][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[0][2], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[0][3], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[0][4], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[0][5], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[1][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[1][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[1][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[3][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[3][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[3][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[2][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[2][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[2][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+				display(finaPoints(baseTimesFemaleLc[4][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+				display(finaPoints(baseTimesFemaleLc[4][1], convertToSeconds(time.getText())));
+			
+			//////////////////////////////////Male Long Course/////////////////////////////////////////////////
+			if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[0][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[0][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[0][2], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[0][3], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[0][4], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[0][5], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[1][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[1][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[1][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[3][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[3][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[3][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[2][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[2][1], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[2][2], convertToSeconds(time.getText())));
+			
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+				display(finaPoints(baseTimesMaleLc[4][0], convertToSeconds(time.getText())));
+			else if(!lc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+				display(finaPoints(baseTimesMaleLc[4][1], convertToSeconds(time.getText())));
+			}
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////Points to time////////////////////////////////////////////////////////
+			/////////////////////Displaying the time depending on the selected options///////////////////////////////
+			else {
+				if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][0])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][1])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][2])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][3])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][4])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[0][5])));
+				
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[1][0])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[1][1])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[1][2])));
+				
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[3][0])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[3][1])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[3][2])));
+				
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[2][0])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[2][1])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[2][2])));
+				
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[1].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[4][1])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[4][2])));
+				else if(!sc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleSc[4][3])));
+			
+				//////////////////////////////////Male Short Course/////////////////////////////////////////////////////
+				if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][0])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][1])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][2])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][3])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][4])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[0][5])));
+				
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[1][0])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[1][1])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[1][2])));
+				
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[3][0])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[3][1])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[3][2])));
+				
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[2][0])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[2][1])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[2][2])));
+				
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[1].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[4][1])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[4][2])));
+				else if(!sc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleSc[4][3])));
+				
+				//////////////////////////////////Female Long Course/////////////////////////////////////////////////////
+				if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][0])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][1])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][2])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][3])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][4])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[0][5])));
+				
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[1][0])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[1][1])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[1][2])));
+				
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[3][0])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[3][1])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[3][2])));
+				
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[2][0])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[2][1])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[2][2])));
+				
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[4][2])));
+				else if(!lc.isEnabled() && !female.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesFemaleLc[4][3])));
+				
+				//////////////////////////////////Male Long Course/////////////////////////////////////////////////
+				if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][0])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][1])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][2])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[3].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][3])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[4].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][4])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[0].isEnabled() && !lengths[5].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[0][5])));
+				
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[1][0])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[1][1])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[1].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[1][2])));
+				
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[3][0])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[3][1])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[2].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[3][2])));
+				
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[0].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[2][0])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[1].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[2][1])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[3].isEnabled() && !lengths[2].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[2][2])));
+				
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[2].isEnabled())			
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[4][2])));
+				else if(!lc.isEnabled() && !male.isEnabled() && !events[4].isEnabled() && !lengths[3].isEnabled()) 
+					panelTime.setText(secondsToTime(convertToSeconds(panelPoints.getText(), baseTimesMaleLc[4][3])));
+				
+		}
+			}
+			
+	}
+		
+
+	//function to convert the time minutes:seconds:miliseconds to seconds
+	//and checks
+	public double convertToSeconds(String sir) {
+		
+		if(sir.isEmpty())	return -1;
+		
+		String[] splited=sir.split(":");
+		if(splited.length>3)	return -1;
+		for(int i=0;i<splited.length;i++) {
+			if(splited[i].length()>2)	return -1;
+		}
+		
+		int min=0, sec=0, milisec=0;
+		if(splited.length==3) {
+			 min=Integer.parseInt(splited[0]);
+			 if(min>59)	return -1;
+			 sec=Integer.parseInt(splited[1]);
+			 if(sec>59)	return -1;
+			 milisec=Integer.parseInt(splited[2]);
+			 if(milisec>99)return -1;
+		}
+		if(splited.length==2) {
+			 min=0;
+			 sec=Integer.parseInt(splited[0]);
+			 if(sec>59)	return -1;
+			 milisec=Integer.parseInt(splited[1]);
+			 if(milisec>99)return -1;
+		}
+		if (splited.length<2)	return -1;
+		
+		double result=min*60+sec+milisec*0.01;
+		
+		return result;
+	}
+	
+	//converting a certain point to seconds based on the base time for that event
+	public double convertToSeconds(String points, double base) {
+		double result;
+		double aux, auxi;
+		
+		double points1=Double.parseDouble(points);
+		
+		if(points1>1100)
+			return -1;
+		
+		aux=(points1/1000.0);
+		auxi=Math.pow(aux, -1/3);
+		
+		result=base*auxi;				
+		
+		return result;
+	}
+	
+	//converting a certain amount of seconds to minutes:seconds:milliseconds 
+	public String secondsToTime(double seconds) {
+		String result=new String();
+		
+		int min, sec, milisec;
+		double min1, sec1, milisec1;
+		
+		min=(int) (seconds/60);
+		
+		sec=(int) (seconds-min*60);
+		
+		milisec=(int) (seconds-sec-min*60);
+		
+		if(seconds==-1) {
+			return "Incorrect";
+		}
+		
+		result=""+min+":"+sec+":"+milisec+"";
+		
+		//result=seconds+"";
+		
+		return result;
+	}
+	
+	//calculating the fina points based on the time and base time
+	public int finaPoints(double base, double seconds) {
+		
+		int point;
+		if(seconds!=-1)
+			point=(int) (1000*Math.pow((base/seconds), 3));
+		else point=-1;
+		
+		if(point>=1100)	return -1;
+		
+		return point;
+	}
+	
+	
+	//displaying the points that were calculated
+	public void display(int point) {
+		if(point!=-1) {
+			points.setText("");
+			points.setText(point+" points");
+		}
+		else	points.setText("Incorrect");
+	}
+	
+	//filling the progressbar
+	public void fill() {
+		int i=counter;
+		while(i<=counter+20) {
+			bar.setValue(i);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			i++;
+		}
+		//bar.setString("DONE!");
+	}
+
+	//changing the image
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(i==0) {
+			img.setIcon(fina);
+			img.setBounds(300, -50, 400, 250);
+			i=1;
+		}
+		if(i==1) {
+			img.setIcon(swim);
+			img.setBounds(220, -50, 600, 250);
+			i=0;
+		}
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+			//img.setIcon(swim);
+			//img.setBounds(220, -50, 400, 250);	
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		//img.setIcon(fina);
+		//img.setBounds(300, -50, 400, 250);	
+	}
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileSave
+
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Font;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+public class FileSave {
+  JTextArea textArea;
+  JButton save;
+  void initUI(String time, String points, String event) {
+    JFrame frame = new JFrame(FileSave.class.getSimpleName());
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    textArea = new JTextArea(24, 80);
+    textArea.setText("For a time of: "+time+"\n You have: "+points+" \n In the event: "+event);
+    textArea.setFont(new Font("MV Boli", Font.BOLD, 40));
+    
+    save = new JButton("Save to file");
+    save.addActionListener(e -> saveToFile());
+    
+    frame.add(new JScrollPane(textArea));
+    
+    JPanel buttonPanel = new JPanel();
+    
+    buttonPanel.add(save);
+    
+    frame.add(buttonPanel, BorderLayout.SOUTH);
+    frame.setSize(900, 400);
+    frame.setVisible(true);
+  }
+
+   void saveToFile() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setBounds(300, 300, 200, 200);
+    int retval = fileChooser.showSaveDialog(save);
+    if (retval == JFileChooser.APPROVE_OPTION) {
+      File file = fileChooser.getSelectedFile();
+      if (file == null) {
+        return;
+      }
+      if (!file.getName().toLowerCase().endsWith(".txt")) {
+        file = new File(file.getParentFile(), file.getName() + ".txt");
+      }
+      try {
+        textArea.write(new OutputStreamWriter(new FileOutputStream(file),
+            "utf-8"));
+        Desktop.getDesktop().open(file);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//NewImage
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+
+public class NewImage {
+	
+	JLabel label;
+	JFrame frame=new JFrame();
+	
+	//opening a new window
+	//i.e: formula, base times(from help menu)
+	NewImage(ImageIcon y, int w, int l, String title){
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		label=new JLabel();
+		label.setBounds(0, 0, w, l);
+		
+		label.setIcon(y);
+		frame.setTitle(title);
+		frame.add(label);
+		frame.setLayout(null);
+		frame.setBounds(200, 50, w, l);
+		frame.setVisible(true);
+	}
+}
+
+
